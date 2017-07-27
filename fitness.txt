@@ -1,0 +1,19 @@
+COMMAND LINE FUNCTIONS:
+
+Enter new workout.
+
+Show all workout data.
+
+Show workouts for x month.
+
+Sum workouts for x month.
+
+Sum workouts for x month with weights.
+
+Compare monthly total with personal_records file and CRUD as necessary.
+
+Input batch data.
+
+WEB FUNCTIONS:
+
+Display graph of all monthly data.

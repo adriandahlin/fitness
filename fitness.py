@@ -13,15 +13,16 @@ with open(csv_file_path, "r") as csv_file:
     reader = csv.DictReader(csv_file)
     for row in reader:
         rows.append(row)
-        print(row["date"], row["sports"])
 
-menu = "Please enter the following operation: new workout "
-operations = ["new workout"]
+menu = "Please enter one of the following operation: 'new workout' OR 'show all' "
+operations = ["new workout", "show all"]
 
 def command_center():
     inp = input(menu)
     if inp == "new workout":
         new_workout()
+    if inp == "show all":
+        show_all()
     if inp not in operations:
         print("I'm sorry, I don't recognize that operation. I'll try to figure it out soon!")
 
@@ -49,5 +50,13 @@ def new_workout():
         for row in rows:
             writer.writerow(row)
         writer.writerow(new_workout)
+    print("Here's your new entry:")
+    print(new_workout["date"], new_workout["run"], new_workout["bike"], new_workout["sports"], new_workout["yoga"], new_workout["abs"], new_workout["lift"])
+
+def show_all():
+    with open(csv_file_path, "r") as csv_file:
+        reader = csv.DictReader(csv_file)
+        for row in reader:
+            print(row["date"], row["run"], row["bike"], row["sports"], row["yoga"], row["abs"], row["lift"])
 
 command_center()
