@@ -1,12 +1,14 @@
-
 from __future__ import print_function
 import httplib2
 import os
+import csv
 
 from apiclient import discovery
 from oauth2client import client
 from oauth2client import tools
 from oauth2client.file import Storage
+
+from IPython import embed
 
 try:
     import argparse
@@ -19,6 +21,8 @@ except ImportError:
 SCOPES = 'https://www.googleapis.com/auth/spreadsheets.readonly'
 CLIENT_SECRET_FILE = 'client_secret.json'
 APPLICATION_NAME = 'Print Range from Google Sheet'
+
+csv_file_path = "more_workouts.csv"
 
 def get_credentials():
     """Gets valid user credentials from storage.
@@ -48,7 +52,7 @@ def get_credentials():
         print('Storing credentials to ' + credential_path)
     return credentials
 
-def get_row():
+def sheet_to_csv():
     """Shows basic usage of the Sheets API.
 
     Creates a Sheets API service object and prints the values from a range of
@@ -63,20 +67,36 @@ def get_row():
                               discoveryServiceUrl=discoveryUrl)
 
     spreadsheetId = '1oI0gf7m68ZrrL5ITTYYvxDdP8NzY5mwmlzb4Y3oGpjA'
-    columnRange = '2017 Jul-Dec!A2:H2'
-    column_headings = service.spreadsheets().values().get(
-        spreadsheetId=spreadsheetId, range=columnRange).execute()
-    column_values = column_headings.get('values', [])
-    rowRange = '2017 Jul-Dec!A3:H3'
-    row = service.spreadsheets().values().get(
-        spreadsheetId=spreadsheetId, range=rowRange).execute()
-    row_values = row.get('values', [])
 
-    if not row_values:
+    # columnRange = '2017 Jul-Dec!A2:H2'
+    # columnData = service.spreadsheets().values().get(
+    #     spreadsheetId=spreadsheetId, range=columnRange).execute()
+    # columnValues = columnData.get('values', [])
+
+    sheetRange = '2017 Jul-Dec!A3:H28'
+    sheetData = service.spreadsheets().values().get(
+        spreadsheetId=spreadsheetId, range=sheetRange).execute()
+    sheetValues = sheetData.get('values', [])
+
+    if not sheetValues:
         print('No data found.')
     else:
-        print(column_values)
-        print(row_values)
+        #print(sheetValues)
+        with open(csv_file_path, "w") as csv_file:
+            writer = csv.DictWriter(csv_file, fieldnames=["date", "summary", "run", "bike", "sports", "yoga", "abs", "lift"])
+            writer.writeheader()
+            for row in sheetValues:
+                workout = {
+                "date": row[0],
+                "summary": row[1],
+                "run": row[2],
+                "bike": row[3],
+                "sports": row[4],
+                "yoga": row[5],
+                "abs": row[6],
+                "lift": row[7]
+                }
+                writer.writerow(workout)
 
 if __name__ == '__main__':
-    get_row()
+    sheet_to_csv()

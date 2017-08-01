@@ -14,6 +14,17 @@ Compare monthly total with personal_records file and CRUD as necessary.
 
 Input batch data.
 
+Look into opening a csv in append mode ('a')
+
 WEB FUNCTIONS:
 
 Display graph of all monthly data.
+
+
+GOOGLE SHEETS API FUNCTIONS:
+
+Read a row from Google Sheet.
+
+Read several rows from a Google Sheet.
+
+Write rows of values from Google Sheet to csv.

@@ -1,4 +1,3 @@
-
 from __future__ import print_function
 import httplib2
 import os
@@ -48,7 +47,7 @@ def get_credentials():
         print('Storing credentials to ' + credential_path)
     return credentials
 
-def get_row():
+def get_whole_sheet():
     """Shows basic usage of the Sheets API.
 
     Creates a Sheets API service object and prints the values from a range of
@@ -63,20 +62,19 @@ def get_row():
                               discoveryServiceUrl=discoveryUrl)
 
     spreadsheetId = '1oI0gf7m68ZrrL5ITTYYvxDdP8NzY5mwmlzb4Y3oGpjA'
-    columnRange = '2017 Jul-Dec!A2:H2'
-    column_headings = service.spreadsheets().values().get(
-        spreadsheetId=spreadsheetId, range=columnRange).execute()
-    column_values = column_headings.get('values', [])
-    rowRange = '2017 Jul-Dec!A3:H3'
-    row = service.spreadsheets().values().get(
-        spreadsheetId=spreadsheetId, range=rowRange).execute()
-    row_values = row.get('values', [])
+    # columnRange = '2017 Jul-Dec!A2:H2'
+    # column_headings = service.spreadsheets().values().get(
+    #     spreadsheetId=spreadsheetId, range=columnRange).execute()
+    # column_values = column_headings.get('values', [])
+    sheetName = '2017 Jul-Dec!C:H'
+    sheetRange = service.spreadsheets().values().get(
+        spreadsheetId=spreadsheetId, range=sheetName).execute()
+    sheetValues = sheetRange.get('values', [])
 
-    if not row_values:
+    if not sheetValues:
         print('No data found.')
     else:
-        print(column_values)
-        print(row_values)
+        print(sheetValues)
 
 if __name__ == '__main__':
-    get_row()
+    get_whole_sheet()
