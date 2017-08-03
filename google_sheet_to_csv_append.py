@@ -22,7 +22,8 @@ SCOPES = 'https://www.googleapis.com/auth/spreadsheets.readonly'
 CLIENT_SECRET_FILE = 'client_secret.json'
 APPLICATION_NAME = 'Print Range from Google Sheet'
 
-csv_file_path = "more_workouts.csv"
+# csv_file_path = input("Submit your desired filepath: ")
+csv_file_path = "all_workouts.csv"
 
 def get_credentials():
     """Gets valid user credentials from storage.
@@ -73,19 +74,24 @@ def sheet_to_csv():
     #     spreadsheetId=spreadsheetId, range=columnRange).execute()
     # columnValues = columnData.get('values', [])
 
-    sheetRange = '2017 Jul-Dec!A3:H28'
+    sheetRange = input("Enter the sheet name and cell range (in A1 format like this without quotation marks - sheet_name!A3:H28): ")
+    #sheetRange = '2017 Jul-Dec!A3:H28'
+    # embed()
     sheetData = service.spreadsheets().values().get(
         spreadsheetId=spreadsheetId, range=sheetRange).execute()
     sheetValues = sheetData.get('values', [])
 
     if not sheetValues:
-        print('No data found.')
+        print('No data found in the selected range.')
     else:
-        #print(sheetValues)
-        with open(csv_file_path, "w") as csv_file:
+        with open(csv_file_path, "a") as csv_file:
             writer = csv.DictWriter(csv_file, fieldnames=["date", "summary", "run", "bike", "sports", "yoga", "abs", "lift"])
-            writer.writeheader()
+            # writer.writeheader()
             for row in sheetValues:
+                # for cell in row:
+                #     if not cell:
+                #         cell = 0
+                print(row)
                 if not row[0]:
                     row[0] = 0
                 if not row[1]:
@@ -101,7 +107,7 @@ def sheet_to_csv():
                 if not row[6]:
                     row[6] = 0
                 if not row[7]:
-                    row[7] = 0    
+                    row[7] = 0
                 workout = {
                 "date": row[0],
                 "summary": row[1],

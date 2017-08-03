@@ -1,8 +1,4 @@
-COMMAND LINE FUNCTIONS:
-
-Enter new workout.
-
-Show all workout data.
+TO DO:
 
 Show workouts for x month.
 
@@ -12,19 +8,15 @@ Sum workouts for x month with weights.
 
 Compare monthly total with personal_records file and CRUD as necessary.
 
-Input batch data.
-
 Look into opening a csv in append mode ('a')
-
-WEB FUNCTIONS:
 
 Display graph of all monthly data.
 
 
-GOOGLE SHEETS API FUNCTIONS:
-
+DONE:
+Enter new workout.
+Show all workout data.
+Input batch data.
 Read a row from Google Sheet.
-
 Read several rows from a Google Sheet.
-
 Write rows of values from Google Sheet to csv.
