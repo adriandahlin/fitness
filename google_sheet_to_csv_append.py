@@ -84,30 +84,33 @@ def sheet_to_csv():
     if not sheetValues:
         print('No data found in the selected range.')
     else:
-        with open(csv_file_path, "a") as csv_file:
+        with open(csv_file_path, "w") as csv_file:
             writer = csv.DictWriter(csv_file, fieldnames=["date", "summary", "run", "bike", "sports", "yoga", "abs", "lift"])
-            # writer.writeheader()
+            writer.writeheader()
             for row in sheetValues:
-                # for cell in row:
-                #     if not cell:
-                #         cell = 0
+                for i in [0,1,2,3,4,5,6,7]:
+                    try:
+                        if not row[i]:
+                            row[i] = 0
+                    except IndexError as e:
+                        row.append(0)
                 print(row)
-                if not row[0]:
-                    row[0] = 0
-                if not row[1]:
-                    row[1] = 0
-                if not row[2]:
-                    row[2] = 0
-                if not row[3]:
-                    row[3] = 0
-                if not row[4]:
-                    row[4] = 0
-                if not row[5]:
-                    row[5] = 0
-                if not row[6]:
-                    row[6] = 0
-                if not row[7]:
-                    row[7] = 0
+                # if not row[0]:
+                #     row[0] = 0
+                # if not row[1]:
+                #     row[1] = 0
+                # if not row[2]:
+                #     row[2] = 0
+                # if not row[3]:
+                #     row[3] = 0
+                # if not row[4]:
+                #     row[4] = 0
+                # if not row[5]:
+                #     row[5] = 0
+                # if not row[6]:
+                #     row[6] = 0
+                # if not row[7]:
+                #     row[7] = 0
                 workout = {
                 "date": row[0],
                 "summary": row[1],
