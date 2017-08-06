@@ -2,13 +2,11 @@ TO DO:
 
 Show workouts for x month.
 
-Sum workouts for x month.
+Sum individual workouts for x month.
 
-Sum workouts for x month with weights.
+Sum all workouts together for x month with weights.
 
 Compare monthly total with personal_records file and CRUD as necessary.
-
-Look into opening a csv in append mode ('a')
 
 Display graph of all monthly data.
 
@@ -20,3 +18,4 @@ Input batch data.
 Read a row from Google Sheet.
 Read several rows from a Google Sheet.
 Write rows of values from Google Sheet to csv.
+Look into opening a csv in append mode ('a')

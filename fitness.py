@@ -1,13 +1,13 @@
 import csv
 
-csv_file_path = "workouts.csv"
+csv_file_path = "workouts_manually_entered.csv"
 
 rows = []
 
-# with open(csv_file_path, "w") as csv_file:
-#     writer = csv.DictWriter(csv_file, fieldnames=["date", "run", "bike", "sports", "yoga", "abs", "lift"])
-#     writer.writeheader()
-#     writer.writerow({"date": "07/1/17", "run": "1.1", "bike": "0", "sports": "0", "yoga": "0", "abs": "5", "lift": "1"})
+with open(csv_file_path, "w") as csv_file:
+    writer = csv.DictWriter(csv_file, fieldnames=["date", "run", "bike", "sports", "yoga", "abs", "lift"])
+    writer.writeheader()
+    writer.writerow({"date": "07/1/17", "run": "1.1", "bike": "0", "sports": "0", "yoga": "0", "abs": "5", "lift": "1"})
 
 with open(csv_file_path, "r") as csv_file:
     reader = csv.DictReader(csv_file)
