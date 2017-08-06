@@ -2,6 +2,7 @@ from __future__ import print_function
 import httplib2
 import os
 import csv
+import pandas as pd
 
 from apiclient import discovery
 from oauth2client import client
@@ -22,7 +23,8 @@ SCOPES = 'https://www.googleapis.com/auth/spreadsheets.readonly'
 CLIENT_SECRET_FILE = 'client_secret.json'
 APPLICATION_NAME = 'Print Range from Google Sheet'
 
-csv_file_path = "more_workouts.csv"
+# csv_file_path = input("Submit your desired filepath: ")
+csv_file_path = "all_workouts.csv"
 
 def get_credentials():
     """Gets valid user credentials from storage.
@@ -52,7 +54,23 @@ def get_credentials():
         print('Storing credentials to ' + credential_path)
     return credentials
 
-def sheet_to_csv():
+menu = '''
+Please pick the number corresponding to the operation that you would like to conduct on the fitness database:
+1 - Create
+2 - Update
+3 - Sum Month
+'''
+
+def handler():
+    operation = input(menu)
+    if operation == "1":
+        sheet_to_csv_create()
+    if operation == "2":
+        sheet_to_csv_append()
+    if operation == "3":
+        sum_month()
+
+def sheet_to_csv_create():
     """Shows basic usage of the Sheets API.
 
     Creates a Sheets API service object and prints the values from a range of
@@ -68,40 +86,26 @@ def sheet_to_csv():
 
     spreadsheetId = '1oI0gf7m68ZrrL5ITTYYvxDdP8NzY5mwmlzb4Y3oGpjA'
 
-    # columnRange = '2017 Jul-Dec!A2:H2'
-    # columnData = service.spreadsheets().values().get(
-    #     spreadsheetId=spreadsheetId, range=columnRange).execute()
-    # columnValues = columnData.get('values', [])
-
     sheetRange = '2017 Jul-Dec!A3:H28'
     sheetData = service.spreadsheets().values().get(
         spreadsheetId=spreadsheetId, range=sheetRange).execute()
     sheetValues = sheetData.get('values', [])
 
+    csv_create_path = input("Submit your desired filepath: ")
+
     if not sheetValues:
         print('No data found.')
     else:
-        #print(sheetValues)
-        with open(csv_file_path, "w") as csv_file:
+        with open(csv_create_path, "w") as csv_file:
             writer = csv.DictWriter(csv_file, fieldnames=["date", "summary", "run", "bike", "sports", "yoga", "abs", "lift"])
             writer.writeheader()
             for row in sheetValues:
-                if not row[0]:
-                    row[0] = 0
-                if not row[1]:
-                    row[1] = 0
-                if not row[2]:
-                    row[2] = 0
-                if not row[3]:
-                    row[3] = 0
-                if not row[4]:
-                    row[4] = 0
-                if not row[5]:
-                    row[5] = 0
-                if not row[6]:
-                    row[6] = 0
-                if not row[7]:
-                    row[7] = 0    
+                for i in [0,1,2,3,4,5,6,7]:
+                    try:
+                        if not row[i]:
+                            row[i] = 0
+                    except IndexError as e:
+                        row.append(0)
                 workout = {
                 "date": row[0],
                 "summary": row[1],
@@ -114,5 +118,113 @@ def sheet_to_csv():
                 }
                 writer.writerow(workout)
 
+def sheet_to_csv_append():
+    """Shows basic usage of the Sheets API.
+
+    Creates a Sheets API service object and prints the values from a range of
+    cells in:
+    https://docs.google.com/spreadsheets/d/1oI0gf7m68ZrrL5ITTYYvxDdP8NzY5mwmlzb4Y3oGpjA/edit
+    """
+    credentials = get_credentials()
+    http = credentials.authorize(httplib2.Http())
+    discoveryUrl = ('https://sheets.googleapis.com/$discovery/rest?'
+                    'version=v4')
+    service = discovery.build('sheets', 'v4', http=http,
+                              discoveryServiceUrl=discoveryUrl)
+
+    spreadsheetId = '1oI0gf7m68ZrrL5ITTYYvxDdP8NzY5mwmlzb4Y3oGpjA'
+
+    sheetRange = input("Enter the sheet name and cell range (in A1 format like this without quotation marks - sheet_name!A3:H28): ")
+    #sheetRange = '2017 Jul-Dec!A3:H28'
+    sheetData = service.spreadsheets().values().get(
+        spreadsheetId=spreadsheetId, range=sheetRange).execute()
+    sheetValues = sheetData.get('values', [])
+
+    if not sheetValues:
+        print('No data found in the selected range.')
+    else:
+        with open(csv_file_path, "a") as csv_file:
+            writer = csv.DictWriter(csv_file, fieldnames=["date", "summary", "run", "bike", "sports", "yoga", "abs", "lift"])
+            #writer.writeheader()
+            for row in sheetValues:
+                for i in [0,1,2,3,4,5,6,7]:
+                    try:
+                        if not row[i]:
+                            row[i] = 0
+                    except IndexError as e:
+                        row.append(0)
+                print(row)
+                # if not row[0]:
+                #     row[0] = 0
+                # if not row[1]:
+                #     row[1] = 0
+                # if not row[2]:
+                #     row[2] = 0
+                # if not row[3]:
+                #     row[3] = 0
+                # if not row[4]:
+                #     row[4] = 0
+                # if not row[5]:
+                #     row[5] = 0
+                # if not row[6]:
+                #     row[6] = 0
+                # if not row[7]:
+                #     row[7] = 0
+                workout = {
+                "date": row[0],
+                "summary": row[1],
+                "run": row[2],
+                "bike": row[3],
+                "sports": row[4],
+                "yoga": row[5],
+                "abs": row[6],
+                "lift": row[7]
+                }
+                writer.writerow(workout)
+
+# printing rows from selected month worked only with DictReader
+def sum_month():
+    month = input("Enter the month you'd like to sum (in mm format): ")
+    month_rows = []
+
+    data = pd.read_csv(csv_file_path)
+    for row in data:
+        if row['date'][0:2] == month:
+            month_rows.append(row)
+    print(row["date"], row['summary'], row["run"], row["bike"], row["sports"], row["yoga"], row["abs"], row["lift"])
+
+    # with open(csv_file_path, "r") as csv_file:
+    #     reader = csv.DictReader(csv_file)
+        #print(header)
+        # for row in reader:
+        #     if row['date'][0:2] == month:
+        #         month_rows.append(row)
+        #         print(row["date"], row['summary'], row["run"], row["bike"], row["sports"], row["yoga"], row["abs"], row["lift"])
+
+        # reader.next()
+        # print(sum(float(x[2]) for x in reader))
+
+        # totals = []
+        # run_total = 0
+        # bike_total = 0
+        # sports_total = 0
+        # yoga_total = 0
+        # abs_total = 0
+        # lift_total = 0
+        # for row in month_rows:
+        #     run_total += int(row[2])
+        #     bike_total += int(row[3])
+        #     sports_total += int(row[4])
+        #     yoga_total += int(row[5])
+        #     abs_total += int(row[6])
+        #     lift_total += int(row[7])
+        # totals.append(run_total)
+        # totals.append(bike_total)
+        # totals.append(sports_total)
+        # totals.append(yoga_total)
+        # totals.append(abs_total)
+        # totals.append(lift_total)
+        # print(totals)
+
 if __name__ == '__main__':
-    sheet_to_csv()
+    handler()
