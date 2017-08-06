@@ -9,21 +9,27 @@ with open(csv_file_path, "r") as csv_file:
     for row in reader:
         rows.append(row)
 
-menu = "Choose one of the following operations: create_db, log, listall, showmonth, or showtoday. "
+menu = '''Please choose the letter corresponding to the operation you would like to complete:
+c - create_db
+l - log
+a - listall
+m - showmonth
+t - showtoday
+'''
 
-operations = ["create_db", "log", "listall", "showmonth", "showtoday"]
+operations = ["c", "l", "a", "m", "t"]
 
 def command_center():
     inp = input(menu)
-    if inp == "create_db":
+    if inp == "c":
         create_db()
-    if inp == "listall":
+    if inp == "a":
         list_all_workouts()
-    if inp == "showmonth":
+    if inp == "m":
         show_month()
-    if inp == "showtoday":
+    if inp == "t":
         show_today()
-    if inp == "log":
+    if inp == "l":
         log_workout()
     if inp not in operations:
         print("I'm sorry, we're not sure what to do with that operation. Please enter listall, showmonth, or showtoday.")
@@ -33,6 +39,7 @@ def create_db():
         writer = csv.DictWriter(csv_file, fieldnames=["date", "run", "bike", "sports", "yoga", "abs", "lift"])
         writer.writeheader()
         writer.writerow({"date": "07/1/17", "run": "1.1", "bike": "0", "sports": "0", "yoga": "0", "abs": "5", "lift": "1"})
+        print("I have created a database with one day's workout added. Check your repository for workouts_manually_entered.csv.")
 
 def list_all_workouts():
     with open(csv_file_path, "r") as csv_file:
@@ -66,8 +73,7 @@ def log_workout():
         writer.writerow(new_workout)
     print("--------")
     print("Here's the workout you've just added:")
-    #print(new_workout["date"], new_workout["run"], new_workout["bike"], new_workout["sports"], new_workout["yoga"], new_workout["abs"], new_workout["lift"])
-    print(new_workout)
+    print(new_workout["date"], new_workout["run"], new_workout["bike"], new_workout["sports"], new_workout["yoga"], new_workout["abs"], new_workout["lift"])
 
 def show_month():
     print("I'm sorry, I haven't figured out how to do this yet. Stay tuned.")
