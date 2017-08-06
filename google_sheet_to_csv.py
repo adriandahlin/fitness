@@ -3,6 +3,7 @@ import httplib2
 import os
 import csv
 import pandas as pd
+import datetime
 
 from apiclient import discovery
 from oauth2client import client
@@ -55,19 +56,19 @@ def get_credentials():
     return credentials
 
 menu = '''
-Please pick the number corresponding to the operation that you would like to conduct on the fitness database:
-1 - Create
-2 - Update
-3 - Sum Month
+Please pick the letter corresponding to the operation that you would like to conduct on the fitness database:
+c - Create
+u - Update
+s - Sum Month
 '''
 
 def handler():
     operation = input(menu)
-    if operation == "1":
+    if operation == "c":
         sheet_to_csv_create()
-    if operation == "2":
+    if operation == "c":
         sheet_to_csv_append()
-    if operation == "3":
+    if operation == "s":
         sum_month()
 
 def sheet_to_csv_create():
@@ -86,7 +87,8 @@ def sheet_to_csv_create():
 
     spreadsheetId = '1oI0gf7m68ZrrL5ITTYYvxDdP8NzY5mwmlzb4Y3oGpjA'
 
-    sheetRange = '2017 Jul-Dec!A3:H28'
+    sheetRange = input("Enter the sheet name and cell range (in A1 format like this without quotation marks - sheet_name!A3:H28): ")
+    #sheetRange = '2017 Jul-Dec!A3:H28'
     sheetData = service.spreadsheets().values().get(
         spreadsheetId=spreadsheetId, range=sheetRange).execute()
     sheetValues = sheetData.get('values', [])
@@ -189,9 +191,14 @@ def sum_month():
 
     data = pd.read_csv(csv_file_path)
     for row in data:
-        if row['date'][0:2] == month:
-            month_rows.append(row)
-    print(row["date"], row['summary'], row["run"], row["bike"], row["sports"], row["yoga"], row["abs"], row["lift"])
+        row["date"] = datetime.datetime.strptime(row["date"], "%m-%d-%Y")
+    selection = data.loc[data['date'].month==month]
+    print(selection)
+    # for row in data:
+    #     row["date"] = datetime.datetime.strptime(row["date"], "%m-%d-%Y")
+    #     if row['date'][%m] == month:
+    #         month_rows.append(row)
+    # print(row["date"], row['summary'], row["run"], row["bike"], row["sports"], row["yoga"], row["abs"], row["lift"])
 
     # with open(csv_file_path, "r") as csv_file:
     #     reader = csv.DictReader(csv_file)
