@@ -25,7 +25,7 @@ CLIENT_SECRET_FILE = 'client_secret.json'
 APPLICATION_NAME = 'Print Range from Google Sheet'
 
 # csv_file_path = input("Submit your desired filepath: ")
-csv_file_path = "all_workouts.csv"
+csv_file_path = "data/all_workouts.csv"
 
 def get_credentials():
     """Gets valid user credentials from storage.
@@ -57,19 +57,22 @@ def get_credentials():
 
 menu = '''
 Please pick the letter corresponding to the operation that you would like to conduct on the fitness database:
-c - Create
-u - Update
-s - Sum Month
+c - create
+u - update
+s - sum some month
+p - print all
 '''
 
 def handler():
     operation = input(menu)
     if operation == "c":
         sheet_to_csv_create()
-    if operation == "c":
+    if operation == "u":
         sheet_to_csv_append()
     if operation == "s":
         sum_month()
+    if operation == "p":
+        print_all()
 
 def sheet_to_csv_create():
     """Shows basic usage of the Sheets API.
@@ -93,7 +96,7 @@ def sheet_to_csv_create():
         spreadsheetId=spreadsheetId, range=sheetRange).execute()
     sheetValues = sheetData.get('values', [])
 
-    csv_create_path = input("Submit your desired filepath: ")
+    csv_create_path = input("Submit your desired filepath starting with data/: ")
 
     if not sheetValues:
         print('No data found.')
@@ -148,6 +151,7 @@ def sheet_to_csv_append():
         with open(csv_file_path, "a") as csv_file:
             writer = csv.DictWriter(csv_file, fieldnames=["date", "summary", "run", "bike", "sports", "yoga", "abs", "lift"])
             #writer.writeheader()
+            print("Here's the data you just added to your database:")
             for row in sheetValues:
                 for i in [0,1,2,3,4,5,6,7]:
                     try:
@@ -156,22 +160,6 @@ def sheet_to_csv_append():
                     except IndexError as e:
                         row.append(0)
                 print(row)
-                # if not row[0]:
-                #     row[0] = 0
-                # if not row[1]:
-                #     row[1] = 0
-                # if not row[2]:
-                #     row[2] = 0
-                # if not row[3]:
-                #     row[3] = 0
-                # if not row[4]:
-                #     row[4] = 0
-                # if not row[5]:
-                #     row[5] = 0
-                # if not row[6]:
-                #     row[6] = 0
-                # if not row[7]:
-                #     row[7] = 0
                 workout = {
                 "date": row[0],
                 "summary": row[1],
@@ -232,6 +220,14 @@ def sum_month():
         # totals.append(abs_total)
         # totals.append(lift_total)
         # print(totals)
+
+def print_all():
+    with open(csv_file_path, "r") as csv_file:
+        reader = csv.DictReader(csv_file, fieldnames=["date", "summary", "run", "bike", "sports", "yoga", "abs", "lift"])
+        print("Here's everything in your database:")
+        #print(header)
+        for row in reader:
+            print(row["date"], row["run"], row["bike"], row["sports"], row["yoga"], row["abs"], row["lift"])
 
 if __name__ == '__main__':
     handler()

@@ -1,6 +1,6 @@
 import csv
 
-csv_file_path = "workouts_manually_entered.csv"
+csv_file_path = "data/workouts_manually_entered.csv"
 
 rows = []
 
