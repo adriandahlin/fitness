@@ -81,4 +81,6 @@ def show_month():
 def show_today():
     print("I'm sorry, I haven't figured out how to do this yet. Stay tuned.")
 
-command_center()
+x = 0
+while x == 0:
+    command_center()
