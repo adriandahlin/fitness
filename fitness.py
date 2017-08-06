@@ -4,22 +4,19 @@ csv_file_path = "workouts_manually_entered.csv"
 
 rows = []
 
-with open(csv_file_path, "w") as csv_file:
-    writer = csv.DictWriter(csv_file, fieldnames=["date", "run", "bike", "sports", "yoga", "abs", "lift"])
-    writer.writeheader()
-    writer.writerow({"date": "07/1/17", "run": "1.1", "bike": "0", "sports": "0", "yoga": "0", "abs": "5", "lift": "1"})
-
 with open(csv_file_path, "r") as csv_file:
     reader = csv.DictReader(csv_file)
     for row in reader:
         rows.append(row)
 
-menu = "Choose one of the following operations: log, listall, showmonth, or showtoday. "
+menu = "Choose one of the following operations: create_db, log, listall, showmonth, or showtoday. "
 
-operations = ["log", "listall", "showmonth", "showtoday"]
+operations = ["create_db", "log", "listall", "showmonth", "showtoday"]
 
 def command_center():
     inp = input(menu)
+    if inp == "create_db":
+        create_db()
     if inp == "listall":
         list_all_workouts()
     if inp == "showmonth":
@@ -30,6 +27,12 @@ def command_center():
         log_workout()
     if inp not in operations:
         print("I'm sorry, we're not sure what to do with that operation. Please enter listall, showmonth, or showtoday.")
+
+def create_db():
+    with open(csv_file_path, "w") as csv_file:
+        writer = csv.DictWriter(csv_file, fieldnames=["date", "run", "bike", "sports", "yoga", "abs", "lift"])
+        writer.writeheader()
+        writer.writerow({"date": "07/1/17", "run": "1.1", "bike": "0", "sports": "0", "yoga": "0", "abs": "5", "lift": "1"})
 
 def list_all_workouts():
     with open(csv_file_path, "r") as csv_file:
