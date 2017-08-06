@@ -1,6 +1,6 @@
 import csv
 
-csv_file_path = "../data/workouts_manually_entered.csv"
+csv_file_path = "data/workouts_manually_entered.csv"
 
 rows = []
 
@@ -10,14 +10,15 @@ with open(csv_file_path, "r") as csv_file:
         rows.append(row)
 
 menu = '''Please choose the letter corresponding to the operation you would like to complete:
-c - create_db
+c - create database
 l - log
-a - listall
-m - showmonth
-t - showtoday
+a - list all
+m - show month
+t - show today
+x - exit program
 '''
 
-operations = ["c", "l", "a", "m", "t"]
+operations = ["c", "l", "a", "m", "t", "x"]
 
 def command_center():
     inp = input(menu)
