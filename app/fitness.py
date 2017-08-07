@@ -1,4 +1,5 @@
 import csv
+from IPython import embed
 
 csv_file_path = "data/workouts_manually_entered.csv"
 
@@ -10,12 +11,8 @@ with open(csv_file_path, "r") as csv_file:
         rows.append(row)
 
 menu = '''Please choose the letter corresponding to the operation you would like to complete:
-c - create database
 l - log
 a - list all
-m - show month
-t - show today
-x - exit program
 '''
 
 operations = ["c", "l", "a", "m", "t", "x"]
@@ -35,11 +32,11 @@ def command_center():
     if inp not in operations:
         print("I'm sorry, we're not sure what to do with that operation. Please enter listall, showmonth, or showtoday.")
 
-    with open(csv_file_path, "w") as csv_file:
-        writer = csv.DictWriter(csv_file, fieldnames=["date", "run", "bike", "sports", "yoga", "abs", "lift"])
-        writer.writeheader()
-        writer.writerow({"date": "07/1/17", "run": "1.1", "bike": "0", "sports": "0", "yoga": "0", "abs": "5", "lift": "1"})
-        print("I have created a database with one day's workout added. Check your repository for workouts_manually_entered.csv.")
+    # with open(csv_file_path, "w") as csv_file:
+    #     writer = csv.DictWriter(csv_file, fieldnames=["date", "run", "bike", "sports", "yoga", "abs", "lift"])
+    #     writer.writeheader()
+    #     writer.writerow({"date": "07/1/17", "run": "1.1", "bike": "0", "sports": "0", "yoga": "0", "abs": "5", "lift": "1"})
+    #     print("I have created a database with one day's workout added. Check your repository for workouts_manually_entered.csv.")
 
 def list_all_workouts():
     with open(csv_file_path, "r") as csv_file:
