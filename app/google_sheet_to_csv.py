@@ -24,7 +24,6 @@ SCOPES = 'https://www.googleapis.com/auth/spreadsheets.readonly'
 CLIENT_SECRET_FILE = 'client_secret.json'
 APPLICATION_NAME = 'Print Range from Google Sheet'
 
-# csv_file_path = input("Submit your desired filepath: ")
 csv_file_path = "data/all_workouts.csv"
 
 def get_credentials():
@@ -59,7 +58,6 @@ menu = '''
 Please pick the letter corresponding to the operation that you would like to conduct on the fitness database:
 c - create
 u - update
-s - sum some month
 p - print all
 '''
 
@@ -145,10 +143,12 @@ def sheet_to_csv_append():
         spreadsheetId=spreadsheetId, range=sheetRange).execute()
     sheetValues = sheetData.get('values', [])
 
+    csv_update_path = input("Submit your desired filepath starting with data/: ")
+
     if not sheetValues:
         print('No data found in the selected range.')
     else:
-        with open(csv_file_path, "a") as csv_file:
+        with open(csv_update_path, "a") as csv_file:
             writer = csv.DictWriter(csv_file, fieldnames=["date", "summary", "run", "bike", "sports", "yoga", "abs", "lift"])
             #writer.writeheader()
             print("Here's the data you just added to your database:")
@@ -222,10 +222,10 @@ def sum_month():
         # print(totals)
 
 def print_all():
-    with open(csv_file_path, "r") as csv_file:
+    csv_print_path = input("Submit your desired filepath starting with data/: ")
+    with open(csv_print_path, "r") as csv_file:
         reader = csv.DictReader(csv_file, fieldnames=["date", "summary", "run", "bike", "sports", "yoga", "abs", "lift"])
         print("Here's everything in your database:")
-        #print(header)
         for row in reader:
             print(row["date"], row["run"], row["bike"], row["sports"], row["yoga"], row["abs"], row["lift"])
 

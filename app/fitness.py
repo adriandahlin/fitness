@@ -35,7 +35,6 @@ def command_center():
     if inp not in operations:
         print("I'm sorry, we're not sure what to do with that operation. Please enter listall, showmonth, or showtoday.")
 
-def create_db():
     with open(csv_file_path, "w") as csv_file:
         writer = csv.DictWriter(csv_file, fieldnames=["date", "run", "bike", "sports", "yoga", "abs", "lift"])
         writer.writeheader()

@@ -1,5 +1,7 @@
 TO DO:
 
+Create backup for when ../ is needed before referencing data/filename.csv
+
 Show workouts for x month.
 
 Sum individual workouts for x month.
