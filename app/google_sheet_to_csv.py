@@ -3,7 +3,8 @@ import httplib2
 import os
 import csv
 import pandas as pd
-import datetime
+from datetime import datetime
+from dateutil.parser import parse
 
 from apiclient import discovery
 from oauth2client import client
@@ -59,18 +60,26 @@ Please pick the letter corresponding to the operation that you would like to con
 c - create
 u - update
 p - print all
+x - exit
 '''
+operations = ["c", "u", "s", "p", "x"]
 
 def handler():
-    operation = input(menu)
-    if operation == "c":
-        sheet_to_csv_create()
-    if operation == "u":
-        sheet_to_csv_append()
-    if operation == "s":
-        sum_month()
-    if operation == "p":
-        print_all()
+    x = 0
+    while x ==0:
+        operation = input(menu)
+        if operation == "c":
+            sheet_to_csv_create()
+        if operation == "u":
+            sheet_to_csv_append()
+        if operation == "s":
+            sum_month()
+        if operation == "p":
+            print_all()
+        if operation == "x":
+            x = 1
+        if operation not in operations:
+            print("I'm sorry, I didn't recognize that operation, please try another:")
 
 def sheet_to_csv_create():
     """Shows basic usage of the Sheets API.
@@ -174,27 +183,35 @@ def sheet_to_csv_append():
 
 # printing rows from selected month worked only with DictReader
 def sum_month():
-    month = input("Enter the month you'd like to sum (in mm format): ")
+    #month = input("Enter the month you'd like to sum (in mm format with quotation marks): ")
     month_rows = []
 
     data = pd.read_csv(csv_file_path)
-    for row in data:
-        row["date"] = datetime.datetime.strptime(row["date"], "%m-%d-%Y")
-    selection = data.loc[data['date'].month==month]
-    print(selection)
+    first_date = datetime.strptime(data["date"][0], '%m/%d/%y') # this works but I still can't loop through data without TypeError: string indices must be integers
+    # print(first_date)
+    # print(type(first_date))
+
+    # for row in data:
+    #     #row["date"] = datetime.strptime(row["date"], "%m/%d/%Y")
+    #     print(row["date"][0])
+    # for row in data:
+    #     row["date"] = datetime.datetime.strptime(row["date"], "%m-%d-%Y")
+    # selection = data.loc[data['date'].month==month]
+    # print(selection)
     # for row in data:
     #     row["date"] = datetime.datetime.strptime(row["date"], "%m-%d-%Y")
     #     if row['date'][%m] == month:
     #         month_rows.append(row)
     # print(row["date"], row['summary'], row["run"], row["bike"], row["sports"], row["yoga"], row["abs"], row["lift"])
 
-    # with open(csv_file_path, "r") as csv_file:
-    #     reader = csv.DictReader(csv_file)
-        #print(header)
-        # for row in reader:
-        #     if row['date'][0:2] == month:
-        #         month_rows.append(row)
-        #         print(row["date"], row['summary'], row["run"], row["bike"], row["sports"], row["yoga"], row["abs"], row["lift"])
+    with open(csv_file_path, "r") as csv_file:
+        reader = csv.DictReader(csv_file)
+        for row in reader:
+            if row["date"][0:2] == month:
+                month_rows.append(row)
+        print(month_rows)
+                print(row)
+                print(row["date"], row['summary'], row["run"], row["bike"], row["sports"], row["yoga"], row["abs"], row["lift"])
 
         # reader.next()
         # print(sum(float(x[2]) for x in reader))
@@ -222,8 +239,8 @@ def sum_month():
         # print(totals)
 
 def print_all():
-    csv_print_path = input("Submit your desired filepath starting with data/: ")
-    with open(csv_print_path, "r") as csv_file:
+    #csv_print_path = input("Submit the filepath of the csv you previously created,starting with data/: ")
+    with open(csv_file_path, "r") as csv_file:
         reader = csv.DictReader(csv_file, fieldnames=["date", "summary", "run", "bike", "sports", "yoga", "abs", "lift"])
         print("Here's everything in your database:")
         for row in reader:

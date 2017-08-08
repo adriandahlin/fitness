@@ -13,34 +13,34 @@ with open(csv_file_path, "r") as csv_file:
 menu = '''Please choose the letter corresponding to the operation you would like to complete:
 l - log
 a - list all
+x - exit
 '''
 
 operations = ["c", "l", "a", "m", "t", "x"]
 
 def command_center():
-    inp = input(menu)
-    if inp == "c":
-        create_db()
-    if inp == "a":
-        list_all_workouts()
-    if inp == "m":
-        show_month()
-    if inp == "t":
-        show_today()
-    if inp == "l":
-        log_workout()
-    if inp not in operations:
-        print("I'm sorry, we're not sure what to do with that operation. Please enter listall, showmonth, or showtoday.")
-
-    # with open(csv_file_path, "w") as csv_file:
-    #     writer = csv.DictWriter(csv_file, fieldnames=["date", "run", "bike", "sports", "yoga", "abs", "lift"])
-    #     writer.writeheader()
-    #     writer.writerow({"date": "07/1/17", "run": "1.1", "bike": "0", "sports": "0", "yoga": "0", "abs": "5", "lift": "1"})
-    #     print("I have created a database with one day's workout added. Check your repository for workouts_manually_entered.csv.")
+    x = 0
+    while x == 0:
+        inp = input(menu)
+        if inp == "c":
+            create_db()
+        if inp == "a":
+            list_all_workouts()
+        if inp == "m":
+            show_month()
+        if inp == "t":
+            show_today()
+        if inp == "l":
+            log_workout()
+        if inp not in operations:
+            print("I'm sorry, we're not sure what to do with that operation. Please enter listall, showmonth, or showtoday.")
+        if inp == "x":
+            x = 1
 
 def list_all_workouts():
     with open(csv_file_path, "r") as csv_file:
         reader = csv.DictReader(csv_file)
+        print("This full list of workouts can also be found at data/workouts_manually_entered.csv.")
         print(reader.fieldnames)
         for row in reader:
             print(row["date"], row["run"], row["bike"], row["sports"], row["yoga"], row["abs"], row["lift"])
@@ -69,7 +69,7 @@ def log_workout():
             writer.writerow(row)
         writer.writerow(new_workout)
     print("--------")
-    print("Here's the workout you've just added:")
+    print("Here's the workout you've just added. You can find the csv at data/workouts_manually_entered.csv.")
     print(new_workout["date"], new_workout["run"], new_workout["bike"], new_workout["sports"], new_workout["yoga"], new_workout["abs"], new_workout["lift"])
 
 def show_month():
@@ -78,6 +78,4 @@ def show_month():
 def show_today():
     print("I'm sorry, I haven't figured out how to do this yet. Stay tuned.")
 
-x = 0
-while x == 0:
-    command_center()
+command_center()
