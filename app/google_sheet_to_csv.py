@@ -67,8 +67,8 @@ x - exit
 operations = ["c", "u", "s", "p", "+", "x"]
 
 def handler(): # for production version, make sure while loop is active
-    # x = 0
-    # while x ==0:
+    x = 0
+    while x ==0:
         operation = input(menu)
         if operation == "c":
             sheet_to_csv_create()
@@ -185,7 +185,6 @@ def sheet_to_csv_append():
                 }
                 writer.writerow(workout)
 
-# printing rows from selected month worked only with DictReader
 def select_range():
     first_date = input("Enter the first day of the period you'd like to display (format = 'yyyy-mm-dd'): ")
     last_date = input("Enter the last day of the period you'd like to display (format = 'yyyy-mm-dd'): ")
