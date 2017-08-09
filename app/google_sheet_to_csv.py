@@ -59,21 +59,22 @@ menu = '''
 Please pick the letter corresponding to the operation that you would like to conduct on the fitness database:
 c - create
 u - update
+s - select from range
 p - print all
 x - exit
 '''
 operations = ["c", "u", "s", "p", "x"]
 
-def handler():
-    x = 0
-    while x ==0:
+def handler(): # for production version, make sure while loop is active
+    # x = 0
+    # while x ==0:
         operation = input(menu)
         if operation == "c":
             sheet_to_csv_create()
         if operation == "u":
             sheet_to_csv_append()
         if operation == "s":
-            sum_month()
+            select_range()
         if operation == "p":
             print_all()
         if operation == "x":
@@ -182,39 +183,16 @@ def sheet_to_csv_append():
                 writer.writerow(workout)
 
 # printing rows from selected month worked only with DictReader
-def sum_month():
-    #month = input("Enter the month you'd like to sum (in mm format with quotation marks): ")
-    month_rows = []
+def select_range():
+    first_date = input("Enter the first day of the period you'd like to sum (format = 'yyyy-mm-dd'): ")
+    last_date = input("Enter the last day of the period you'd like to sum (format = 'yyyy-mm-dd'): ")
 
     data = pd.read_csv(csv_file_path)
-    first_date = datetime.strptime(data["date"][0], '%m/%d/%y') # this works but I still can't loop through data without TypeError: string indices must be integers
-    # print(first_date)
-    # print(type(first_date))
-
-    # for row in data:
-    #     #row["date"] = datetime.strptime(row["date"], "%m/%d/%Y")
-    #     print(row["date"][0])
-    # for row in data:
-    #     row["date"] = datetime.datetime.strptime(row["date"], "%m-%d-%Y")
-    # selection = data.loc[data['date'].month==month]
-    # print(selection)
-    # for row in data:
-    #     row["date"] = datetime.datetime.strptime(row["date"], "%m-%d-%Y")
-    #     if row['date'][%m] == month:
-    #         month_rows.append(row)
-    # print(row["date"], row['summary'], row["run"], row["bike"], row["sports"], row["yoga"], row["abs"], row["lift"])
-
-    with open(csv_file_path, "r") as csv_file:
-        reader = csv.DictReader(csv_file)
-        for row in reader:
-            if row["date"][0:2] == month:
-                month_rows.append(row)
-        print(month_rows)
-                print(row)
-                print(row["date"], row['summary'], row["run"], row["bike"], row["sports"], row["yoga"], row["abs"], row["lift"])
-
-        # reader.next()
-        # print(sum(float(x[2]) for x in reader))
+    data['date'] = pd.to_datetime(data['date'])
+    data.index = data['date']
+    data.drop(['date'], axis=1, inplace=True)
+    selection = data.ix[first_date:last_date]
+    print(selection)
 
         # totals = []
         # run_total = 0
