@@ -61,9 +61,10 @@ c - create
 u - update
 s - select from range
 p - print all
++ - sum range
 x - exit
 '''
-operations = ["c", "u", "s", "p", "x"]
+operations = ["c", "u", "s", "p", "+", "x"]
 
 def handler(): # for production version, make sure while loop is active
     # x = 0
@@ -79,6 +80,8 @@ def handler(): # for production version, make sure while loop is active
             print_all()
         if operation == "x":
             x = 1
+        if operation == "+":
+            sum_range()
         if operation not in operations:
             print("I'm sorry, I didn't recognize that operation, please try another:")
 
@@ -184,8 +187,8 @@ def sheet_to_csv_append():
 
 # printing rows from selected month worked only with DictReader
 def select_range():
-    first_date = input("Enter the first day of the period you'd like to sum (format = 'yyyy-mm-dd'): ")
-    last_date = input("Enter the last day of the period you'd like to sum (format = 'yyyy-mm-dd'): ")
+    first_date = input("Enter the first day of the period you'd like to display (format = 'yyyy-mm-dd'): ")
+    last_date = input("Enter the last day of the period you'd like to display (format = 'yyyy-mm-dd'): ")
 
     data = pd.read_csv(csv_file_path)
     data['date'] = pd.to_datetime(data['date'])
@@ -194,27 +197,32 @@ def select_range():
     selection = data.ix[first_date:last_date]
     print(selection)
 
-        # totals = []
-        # run_total = 0
-        # bike_total = 0
-        # sports_total = 0
-        # yoga_total = 0
-        # abs_total = 0
-        # lift_total = 0
-        # for row in month_rows:
-        #     run_total += int(row[2])
-        #     bike_total += int(row[3])
-        #     sports_total += int(row[4])
-        #     yoga_total += int(row[5])
-        #     abs_total += int(row[6])
-        #     lift_total += int(row[7])
-        # totals.append(run_total)
-        # totals.append(bike_total)
-        # totals.append(sports_total)
-        # totals.append(yoga_total)
-        # totals.append(abs_total)
-        # totals.append(lift_total)
-        # print(totals)
+def sum_range():
+    # first_date = '2017-01-01'
+    # last_date = '2017-01-31'
+    first_date = input("Enter the first day of the period you'd like to sum (format = 'yyyy-mm-dd'): ")
+    last_date = input("Enter the last day of the period you'd like to sum (format = 'yyyy-mm-dd'): ")
+
+    data = pd.read_csv(csv_file_path)
+    data['date'] = pd.to_datetime(data['date'])
+    data.index = data['date']
+    data.drop(['date'], axis=1, inplace=True)
+    selection = data.ix[first_date:last_date]
+    totals = []
+    run_total = selection['run'].sum(axis=0)
+    bike_total = selection['bike'].sum(axis=0)
+    sports_total = selection['sports'].sum(axis=0)
+    yoga_total = selection['yoga'].sum(axis=0)
+    abs_total = selection['abs'].sum(axis=0)
+    lift_total = selection['lift'].sum(axis=0)
+    totals.append("Totals: ")
+    totals.append(run_total)
+    totals.append(bike_total)
+    totals.append(sports_total)
+    totals.append(yoga_total)
+    totals.append(abs_total)
+    totals.append(lift_total)
+    print(totals)
 
 def print_all():
     #csv_print_path = input("Submit the filepath of the csv you previously created,starting with data/: ")
