@@ -203,11 +203,14 @@ def sum_range():
     first_date = input("Enter the first day of the period you'd like to sum (format = 'yyyy-mm-dd'): ")
     last_date = input("Enter the last day of the period you'd like to sum (format = 'yyyy-mm-dd'): ")
 
+    # selecting the rows
     data = pd.read_csv(csv_file_path)
     data['date'] = pd.to_datetime(data['date'])
     data.index = data['date']
     data.drop(['date'], axis=1, inplace=True)
     selection = data.ix[first_date:last_date]
+
+    # totaling the selected rows
     totals = []
     run_total = selection['run'].sum(axis=0)
     bike_total = selection['bike'].sum(axis=0)

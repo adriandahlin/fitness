@@ -2,10 +2,6 @@ TO DO:
 
 Create backup for when ../ is needed before referencing data/filename.csv
 
-Show workouts for x month.
-
-Sum individual workouts for x month.
-
 Sum all workouts together for x month with weights.
 
 Compare monthly total with personal_records file and CRUD as necessary.
@@ -21,3 +17,5 @@ Read a row from Google Sheet.
 Read several rows from a Google Sheet.
 Write rows of values from Google Sheet to csv.
 Look into opening a csv in append mode ('a')
+Show workouts for x month.
+Sum individual workouts for x month.
